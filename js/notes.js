@@ -1,13 +1,24 @@
 class Note {
   constructor(title) {
     this.title = title;
-    // HINT🤩 this.element = this.createElement(title);
+    this.note = this.createElement(title);
   }
   
   createElement(title){
     let newNote = document.createElement('div');
+    newNote.setAttribute("class", "card");
     
-    // HINT🤩 a.addEventListener('click', this.remove.bind(newNote));
+    let p = document.createElement('p');
+    p.innerHTML = `${this.title}`;
+    let a = document.createElement('a');
+    a.setAttribute("href", "#");
+    a.setAttribute("class", "card-remove");
+    a.innerHTML = "Remove";
+
+    newNote.appendChild(p);
+    newNote.appendChild(a);
+
+    a.addEventListener('click', this.remove.bind(newNote));
     
     return newNote;
   }
@@ -15,6 +26,8 @@ class Note {
   add(){
     // HINT🤩
     // this function should append the note to the screen somehow
+    let notes = document.querySelector('.notes');
+    notes.appendChild(this.note);
   }
   
   saveToStorage(){
@@ -63,3 +76,6 @@ class App {
 }
 
 let app = new App();
+
+let note1 = new Note("TEstinng");
+note1.add();
