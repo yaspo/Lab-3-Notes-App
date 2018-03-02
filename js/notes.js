@@ -1,3 +1,5 @@
+let allNotes = [];
+
 class Note {
   constructor(title) {
     this.title = title;
@@ -34,6 +36,12 @@ class Note {
     // HINT🤩
     // localStorage only supports strings, not arrays
     // if you want to store arrays, look at JSON.parse and JSON.stringify
+    allNotes.push(this);
+    let json = JSON.stringify(allNotes);
+    localStorage.setItem("notes", json);
+    //console.log(json);
+    //console.log(allNotes);
+
   }
   
   remove(){
@@ -58,7 +66,7 @@ class App {
     this.txtAdd = document.querySelector('#txtAddNote');
     this.txtAdd.addEventListener("keydown", this.createNote.bind(this));
 
-    // this.loadNotesFromStorage();
+    this.loadNotesFromStorage();
     /*
     function(e) {
       let key = e.which || e.keyCode;
@@ -68,12 +76,25 @@ class App {
     }
 
     */
+    /* testing localstorage example
+      localStorage.setItem('bgcolor', 'red');
+      localStorage.setItem('font', 'Helvetica');
+      localStorage.setItem('image', 'myCat.png');
+    */
   }
   
   loadNotesFromStorage() {
     // HINT🤩
     // load all notes from storage here and add them to the screen
     // something like note.add() in a loop would be nice
+
+    allNotes = JSON.parse(localStorage.getItem("notes"));
+    //console.log(allNotes);
+    allNotes.map(note => {
+                    let newNote = new Note(note.title); 
+                    newNote.add();
+    });
+
   }
    
   createNote(e){
@@ -97,6 +118,7 @@ class App {
     this.reset();
 
     // note.saveToStorage();
+    newNote.saveToStorage();
     // this.reset();
   }
   
