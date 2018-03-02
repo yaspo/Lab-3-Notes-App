@@ -39,6 +39,9 @@ class Note {
   remove(){
     // HINT🤩 the meaning of 'this' was set by bind() in the createElement function
     // in this function, 'this' will refer to the current note element
+
+    this.remove();
+
   } 
 }
 
@@ -91,6 +94,7 @@ class App {
     let title = document.querySelector('#txtAddNote').value;
     let newNote = new Note(title);
     newNote.add();
+    this.reset();
 
     // note.saveToStorage();
     // this.reset();
@@ -98,11 +102,12 @@ class App {
   
   reset(){
     // this function should reset the form 
+    let form = document.querySelector('#txtAddNote');
+    form.value = "";
+    form.focus();
+
   }
   
 }
 
 let app = new App();
-
-let note1 = new Note("TEstinng");
-note1.add();
