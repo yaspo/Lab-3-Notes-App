@@ -1,11 +1,18 @@
+/* Array to keep track of all notes being added and removed.                        */
+/* This is what gets saved to and loaded from localstorage.                         */
+/* (it being outside of any class feels unclean; should be part of the app class?)  */
 let allNotes = [];
 
 class Note {
+
+  /* Construct note based on title */
   constructor(title) {
     this.title = title;
     this.note = this.createElement(title);
   }
   
+  /* Create a note element by creating the related HTML object.                   */
+  /* Adds necessary event listeners for the remove function to work for each note */
   createElement(title){
     let newNote = document.createElement('div');
     newNote.setAttribute("class", "card");
@@ -26,65 +33,44 @@ class Note {
     return newNote;
   }
   
+  /* Add created notes to page */
   add(){
-    // HINT🤩
-    // this function should append the note to the screen somehow
-    
     let notes = document.querySelector('.notes');
     notes.appendChild(this.note);
   }
   
+  /* Save notes to localstorage so they be added again when the page gets reloaded */
   saveToStorage(){
-    // HINT🤩
-    // localStorage only supports strings, not arrays
-    // if you want to store arrays, look at JSON.parse and JSON.stringify
     allNotes.push(this.title);
+
     let json = JSON.stringify(allNotes);
     localStorage.setItem("notes", json);
-    //console.log(json);
-    //console.log(allNotes);
-
   }
   
-  //where to call this function?
-  //calling in remove would make most sense, but it's out of its scope .. 
+  /* Remove notes from localstorage so they don't get displayed on reloading the page */
   removeFromStorage() {
     var i = allNotes.indexOf(this.title);
     allNotes.splice(i, 1);
 
-    //code dupe, function? Not necessary for now .. but could use one
+    //code dupe. Fine now, watch out for future.
     let json = JSON.stringify(allNotes);
     localStorage.setItem("notes", json);
-
-    console.log(allNotes);
   }
 
+  /* Remove note from the page */
   remove(e){
-    // HINT🤩 the meaning of 'this' was set by bind() in the createElement function
-    // in this function, 'this' will refer to the current note element
-    
-    /* This is a bad idea. Wanted to circumvent scope problems but only created new ones. 
-    /* Should aim to fix scope issue some other way instead.
-    
-    this.removeFromStorage();
-    let note = e.currentTarget.parentNode; //this is bad, what if HTML changes?
-    note.remove();
-
-    */ 
-    
     this.remove();
-
   } 
 
 }
 
 class App {
+
+  /* Initiates the app by loading notes from localstorage.        */
+  /* Creates necessary eventlisteners to use app's functionality  */
   constructor() {
     console.log("👊🏼 The Constructor!");
-  
-    // HINT🤩
-    // clicking the button should work
-    // pressing the enter key should also work
+
     this.btnAdd = document.querySelector('#btnAddNote');
     this.btnAdd.addEventListener("click", this.createNote.bind(this));
 
@@ -92,27 +78,10 @@ class App {
     this.txtAdd.addEventListener("keydown", this.createNote.bind(this));
 
     this.loadNotesFromStorage();
-    /*
-    function(e) {
-      let key = e.which || e.keyCode;
-      if (key === 13) { // 13 is enter
-        this.createNote.bind(this);
-      }
-    }
-
-    */
-    /* testing localstorage example
-      localStorage.setItem('bgcolor', 'red');
-      localStorage.setItem('font', 'Helvetica');
-      localStorage.setItem('image', 'myCat.png');
-    */
   }
   
+  /* Loads notes from localstorage, creates them and adds their title to allNotes */
   loadNotesFromStorage() {
-    // HINT🤩
-    // load all notes from storage here and add them to the screen
-    // something like note.add() in a loop would be nice
-
     allNotes = JSON.parse(localStorage.getItem("notes"));
     console.log(allNotes);
     allNotes.map(note => {
@@ -121,15 +90,9 @@ class App {
     });
 
   }
-   
+  
+  /* Creates a note based on the value of the textfield and adds it to the page. */
   createNote(e){
-    // this function should create a new note by using the Note() class
-    
-    // HINT🤩
-    // note.add();
-    
-    // console.log(e);
-
     if (e.type == 'keydown') {
         if (e.which !== 13) {
           //in case the pressed key is not enter, leave the function
@@ -142,21 +105,17 @@ class App {
     newNote.add();
     this.reset();
 
-    // note.saveToStorage();
     newNote.saveToStorage();
-    // this.reset();
-
-    console.log(allNotes);
   }
   
+  /* Clears out the textfield so it can be re-used */
   reset(){
-    // this function should reset the form 
     let form = document.querySelector('#txtAddNote');
     form.value = "";
     form.focus();
-
   }
   
 }
 
+/* Launch app */
 let app = new App();
