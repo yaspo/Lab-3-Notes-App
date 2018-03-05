@@ -20,7 +20,8 @@ class Note {
     newNote.appendChild(p);
     newNote.appendChild(a);
 
-    a.addEventListener('click', this.remove.bind(newNote));
+    a.addEventListener('click', this.removeFromStorage.bind(this));
+    a.addEventListener('click', this.remove.bind(newNote));  
     
     return newNote;
   }
@@ -28,6 +29,7 @@ class Note {
   add(){
     // HINT🤩
     // this function should append the note to the screen somehow
+    
     let notes = document.querySelector('.notes');
     notes.appendChild(this.note);
   }
@@ -36,7 +38,7 @@ class Note {
     // HINT🤩
     // localStorage only supports strings, not arrays
     // if you want to store arrays, look at JSON.parse and JSON.stringify
-    allNotes.push(this);
+    allNotes.push(this.title);
     let json = JSON.stringify(allNotes);
     localStorage.setItem("notes", json);
     //console.log(json);
@@ -44,13 +46,36 @@ class Note {
 
   }
   
-  remove(){
+  //where to call this function?
+  //calling in remove would make most sense, but it's out of its scope .. 
+  removeFromStorage() {
+    var i = allNotes.indexOf(this.title);
+    allNotes.splice(i, 1);
+
+    //code dupe, function? Not necessary for now .. but could use one
+    let json = JSON.stringify(allNotes);
+    localStorage.setItem("notes", json);
+
+    console.log(allNotes);
+  }
+
+  remove(e){
     // HINT🤩 the meaning of 'this' was set by bind() in the createElement function
     // in this function, 'this' will refer to the current note element
+    
+    /* This is a bad idea. Wanted to circumvent scope problems but only created new ones. 
+    /* Should aim to fix scope issue some other way instead.
+    
+    this.removeFromStorage();
+    let note = e.currentTarget.parentNode; //this is bad, what if HTML changes?
+    note.remove();
 
+    */ 
+    
     this.remove();
 
   } 
+
 }
 
 class App {
@@ -89,9 +114,9 @@ class App {
     // something like note.add() in a loop would be nice
 
     allNotes = JSON.parse(localStorage.getItem("notes"));
-    //console.log(allNotes);
+    console.log(allNotes);
     allNotes.map(note => {
-                    let newNote = new Note(note.title); 
+                    let newNote = new Note(note); 
                     newNote.add();
     });
 
@@ -120,6 +145,8 @@ class App {
     // note.saveToStorage();
     newNote.saveToStorage();
     // this.reset();
+
+    console.log(allNotes);
   }
   
   reset(){
