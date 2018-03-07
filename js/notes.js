@@ -69,8 +69,6 @@ class App {
   /* Initiates the app by loading notes from localstorage.        */
   /* Creates necessary eventlisteners to use app's functionality  */
   constructor() {
-    console.log("👊🏼 The Constructor!");
-
     this.btnAdd = document.querySelector('#btnAddNote');
     this.btnAdd.addEventListener("click", this.createNote.bind(this));
 
@@ -82,8 +80,8 @@ class App {
   
   /* Loads notes from localstorage, creates them and adds their title to allNotes */
   loadNotesFromStorage() {
-    allNotes = JSON.parse(localStorage.getItem("notes"));
-    console.log(allNotes);
+    let storage = JSON.parse(localStorage.getItem("notes"));
+    storage.map(stored => allNotes.push(stored));
     allNotes.map(note => {
                     let newNote = new Note(note); 
                     newNote.add();
@@ -118,4 +116,7 @@ class App {
 }
 
 /* Launch app */
+
 let app = new App();
+//newNote = new Note('fucking nice');
+//newNote.add();
